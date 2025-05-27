@@ -266,7 +266,7 @@ class QuizApp {
     }
 
     navigateQuestion(){
-        if(this.currentQuestionIndex >= this.totalQuestions) return this.showQuizCompleted();
+        if(this.currentQuestionIndex >= this.totalQuestions) return this.showQuizCompleted(true);
         this.refreshSubmitButton();
         // this.elements.toggleManualBtn.style.display = 'block';
         this.isManualMode = true;
@@ -599,9 +599,16 @@ class QuizApp {
         text.textContent = seconds + "s";
     }
 
-    showQuizCompleted(){
-        document.querySelector(".quiz-card").style.display = "none";
-        document.querySelector(".quiz-complete-container").style.display = "flex";
+    showQuizCompleted(newSubmission = false){
+        try {
+            document.querySelector(".quiz-card").style.display = "none";
+            document.querySelector(".quiz-complete-container").style.display = "flex";
+            if(newSubmission == true){    
+                    this.fetchPost("/sendcreditmail");
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

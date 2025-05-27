@@ -11,9 +11,35 @@ const DashboardController  = {
             const [{value : responses}, {value : questions = []} = {}] = await Promise.allSettled([responses_Pr, questions_Pr]);
             const arra = [];
             responses.forEach(element => {
-                arra.push({AGENTID: element.AGENTID, response : JSON.parse(element.AgentResponses)})
+                const agentResponseParsed = JSON.parse(element.AgentResponses);
+                const resultParsedResponse = [];
+                agentResponseParsed.forEach(answerRes => {
+                    const data = {
+                        WQRID : answerRes.WQRID,
+                        QUESTIONNUM : answerRes.QUESTIONNUM,
+                        QUESTIONSTRING : answerRes.QUESTIONSTRING,
+                        USERANSWER : JSON.parse(answerRes.USERANSWER),
+                        RESPONSETYPE : answerRes.RESPONSETYPE,
+                        CREATEDDATE : answerRes.CREATEDDATE,
+                        IPADDRESS : answerRes.IPADDRESS,
+                        TYPED_ANSWER : answerRes.TYPED_ANSWER || ''
+                    };
+                    resultParsedResponse.push(data);
+                })
+                arra.push({
+                    AGENTID: element.AGENTID,
+                    EMAILID : agentResponseParsed[0].EMAIL,
+                    AGENT_NAME : agentResponseParsed[0].NAME, 
+                    response : resultParsedResponse
+                });
+
+                // arra.push({
+                //     AGENTID: element.AGENTID,
+                //     EMAILID : agentResponseParsed[0].EMAIL,
+                //     AGENT_NAME : agentResponseParsed[0].NAME, 
+                //     response : JSON.parse(element.AgentResponses)})
             });
-            res.status(200).json({responses : arra, totalQuestions : questions})
+            res.status(200).json({responses : arra, totalQuestions : questions.length})
         }catch(err){
             console.log(err);
         }

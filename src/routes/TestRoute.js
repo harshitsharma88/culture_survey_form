@@ -5,9 +5,11 @@ const TokenMethods = require("../middlewares/jsonToken");
 
 Router.get("/getquestions", TokenMethods.verifyJSONToken, TestController.getQuizQuestions);
 
+Router.get("/userinfo", TokenMethods.verifyJSONToken, UserControlller.getAgentInfo);
+
 Router.post("/submitanswers", TokenMethods.verifyJSONToken, TestController.submitQuizResponses);
 
-Router.get("/userinfo", TokenMethods.verifyJSONToken, UserControlller.getAgentInfo)
+Router.post("/sendcreditmail", TokenMethods.verifyJSONToken, TestController.sendCreditWalletMail);
 
 Router.get("/", TestController.RenderTestPage);
 

@@ -65,6 +65,55 @@ const TestController = {
         } catch (error) {
             return res.status(200).json([]);
         }
+    },
+    async sendCreditWalletMail(req, res, next){
+        try {
+            const {agentid, comp_name = "", mobile = "", emailid} = req.userInfo;
+            if(!agentid || agentid == null || agentid == ''){
+                return res.status(400).json({error : "Missing Required Parameters", message : "AgentID needed to process the request"});
+            };
+            const { ipAddress } = Helpers.getIP_DeviceIfoOfRequest(req);
+            const bookingID_Pr = executeStoredProcedure("usp_GetSequence", [{name : "servicetype", value : "OFFERBOOKING"}]);
+            const transactionId_Pr = executeStoredProcedure("usp_GetSequence", [{name : "servicetype", value : "OFFERTXN"}]);
+            const [{value : booking_ID} = {}, {value : txn_ID } = {}] = await Promise.allSettled([bookingID_Pr, transactionId_Pr]);
+            if((Array.isArray(booking_ID) && booking_ID.length > 0) && (Array.isArray(txn_ID) && txn_ID.length > 0)){
+                const bookOBJ = booking_ID[0];
+                const txnOBJ = txn_ID[0];
+                if(bookOBJ && txnOBJ){
+                    const bookingID = bookOBJ[''];
+                    const txnID = txnOBJ[''];
+                    if(bookingID && txnID){
+                        const insertWalletAPI_Data =  {
+                            "bookingID": `${bookingID}`,
+                            "txn_ID": `${txnID}`,
+                            "agentID": agentid,
+                            "usdAmount": 300,
+                            "inrAmount": 0,
+                            "agencyName": comp_name,
+                            "emailId": emailid,
+                            "mobileNo": mobile ,
+                            "bookingStatus": "Success",
+                            "bookingType": "Wallet",
+                            "bookingMode": "Online",
+                            "paymentMode": "Credit",
+                            "paymentMessage": "$300 credit to wallet as survey feedback",
+                            "createdDate": new Date(),
+                            "remark": "$300 credit to wallet as per offer",
+                            "ipAddress": ipAddress
+                        };
+                        const result = await Helpers.postRequest(`${process.env.mainapi}Account/InsertWalletDetails`, insertWalletAPI_Data);
+                        return res.status(200).json({result : result.data});
+                    }
+                }else{
+                    return res.status(400).json({error : "Booking ID Or Txn Id not generated"});
+                }
+            }else{
+                return res.status(400).json({error : "Booking ID Or Txn Id not generated"});
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({error});
+        }
     }
 };
 

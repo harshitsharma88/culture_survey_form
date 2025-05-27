@@ -452,75 +452,291 @@
 /* Quiz Completed CSS START */
 
  .quiz-complete-container {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 24px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 300px;
-  box-sizing: border-box;
-}
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 40px 24px;
+            background: linear-gradient(145deg, #ffffff, #f8f9ff);
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.15),
+                0 0 0 1px rgba(255,255,255,0.8) inset;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 350px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            animation: containerPulse 2s ease-in-out;
+        }
 
-.quiz-complete-content {
-  text-align: center;
-}
+        @keyframes containerPulse {
+            0% { 
+                transform: scale(0.95); 
+                opacity: 0;
+            }
+            50% { 
+                transform: scale(1.02); 
+            }
+            100% { 
+                transform: scale(1); 
+                opacity: 1;
+            }
+        }
 
-.quiz-complete-content .icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-}
+        /* Floating money background animation */
+        .quiz-complete-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(40, 167, 69, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 193, 7, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 123, 255, 0.1) 0%, transparent 50%);
+            animation: backgroundFloat 6s ease-in-out infinite;
+            pointer-events: none;
+        }
 
-.quiz-complete-content h2 {
-  font-size: 24px;
-  margin-bottom: 12px;
-  color: #333;
-}
+        @keyframes backgroundFloat {
+            0%, 100% { 
+                opacity: 0.3;
+                transform: translateY(0px);
+            }
+            50% { 
+                opacity: 0.7;
+                transform: translateY(-10px);
+            }
+        }
 
-.quiz-complete-content p {
-  font-size: 16px;
-  color: #666;
-}
+        /* Floating dollar signs */
+        .floating-dollars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
 
-.go-home-btn {
-  align-self: center;
-  margin-top: 32px;
-  padding: 12px 24px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
+        .dollar {
+            position: absolute;
+            font-size: 24px;
+            color: #28a745;
+            opacity: 0.7;
+            animation: floatUp 4s ease-out infinite;
+        }
 
-.go-home-btn:hover {
-  background-color: #0056b3;
-}
+        .dollar:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .dollar:nth-child(2) { left: 20%; animation-delay: 0.5s; font-size: 18px; }
+        .dollar:nth-child(3) { left: 30%; animation-delay: 1s; }
+        .dollar:nth-child(4) { left: 50%; animation-delay: 1.5s; font-size: 20px; }
+        .dollar:nth-child(5) { left: 70%; animation-delay: 2s; }
+        .dollar:nth-child(6) { left: 80%; animation-delay: 2.5s; font-size: 16px; }
+        .dollar:nth-child(7) { left: 90%; animation-delay: 3s; }
 
-@media (max-width: 600px) {
-  .quiz-complete-container {
-    margin: 20px;
-    padding: 16px;
-  }
+        @keyframes floatUp {
+            0% {
+                bottom: -50px;
+                opacity: 0;
+                transform: translateX(0px) rotate(0deg);
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                bottom: 120%;
+                opacity: 0;
+                transform: translateX(20px) rotate(360deg);
+            }
+        }
 
-  .quiz-complete-content h2 {
-    font-size: 20px;
-  }
+        .quiz-complete-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
 
-  .quiz-complete-content p {
-    font-size: 14px;
-  }
+        .quiz-complete-content .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: iconBounce 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
 
-  .go-home-btn {
-    width: 100%;
-    padding: 10px;
-  }
-}
+        @keyframes iconBounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            40% {
+                transform: translateY(-10px) scale(1.1);
+            }
+            60% {
+                transform: translateY(-5px) scale(1.05);
+            }
+        }
+
+        .quiz-complete-content h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            color: #2c3e50;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            to {
+                text-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+            }
+        }
+
+        .quiz-complete-content p {
+            font-size: 18px;
+            color: #495057;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .amount-highlight {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 22px;
+            text-shadow: 0 1px 2px rgba(40, 167, 69, 0.3);
+            animation: amountPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes amountPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .go-home-btn {
+            align-self: center;
+            margin-top: 32px;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .go-home-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .go-home-btn:hover::before {
+            left: 100%;
+        }
+
+        .go-home-btn:hover {
+            background: linear-gradient(45deg, #20c997, #28a745);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .go-home-btn:active {
+            transform: translateY(0px);
+        }
+
+        /* Sparkle effects */
+        .sparkles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: sparkleAnimation 3s ease-in-out infinite;
+        }
+
+        .sparkle:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 30%; right: 20%; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { top: 60%; left: 25%; animation-delay: 1s; }
+        .sparkle:nth-child(4) { top: 70%; right: 15%; animation-delay: 1.5s; }
+        .sparkle:nth-child(5) { top: 40%; left: 80%; animation-delay: 2s; }
+
+        @keyframes sparkleAnimation {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .quiz-complete-container {
+                margin: 20px;
+                padding: 24px 16px;
+                min-height: 300px;
+            }
+            
+            .quiz-complete-content .icon {
+                font-size: 60px;
+            }
+            
+            .quiz-complete-content h2 {
+                font-size: 24px;
+            }
+            
+            .quiz-complete-content p {
+                font-size: 16px;
+            }
+            
+            .amount-highlight {
+                font-size: 18px;
+            }
+            
+            .go-home-btn {
+                width: 100%;
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .dollar {
+                font-size: 18px;
+            }
+        }
 
 
 /* Quiz Completed CSS END */

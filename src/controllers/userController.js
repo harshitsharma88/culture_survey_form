@@ -15,8 +15,10 @@ const userController = {
                 agentid : result[0].AgentID,
                 emailid : result[0].Emailid,
                 name : result[0].Name,
-                logo : result[0].Logo?.replace("..", process.env.maindomain)
-            }
+                logo : result[0].Logo?.replace("..", process.env.maindomain),
+                comp_name : result[0].Comp_Name,
+                mobile : result[0].Contact 
+            };
             const token  = TokenMethods.generateJSONToken(userData);
             return res.render("setToken", {token : token});
         } catch (error) {
