@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     new QuizApp();
 });
 
-
 class QuizApp {
     constructor() {
         this.currentQuestionIndex = 0;
@@ -218,33 +217,6 @@ class QuizApp {
     displayQuestion() {
         if (this.questions.length === 0) return;
         this.navigateQuestion();
-    }
-
-    selectOption(optionElement) {
-        if (this.isManualMode) return;
-
-        // Remove previous selection
-        this.elements.optionsContainer.querySelectorAll('.option').forEach(opt => {
-            opt.classList.remove('selected');
-        });
-
-        // Add selection to clicked option
-        optionElement.classList.add('selected');
-
-        // Save answer
-        const value = optionElement.dataset.value;
-        const text = optionElement.querySelector('.option-text').textContent;
-        this.selectedAnswers[this.currentQuestionIndex] = {
-            type: 'multiple-choice',
-            value: value,
-            text: text
-        };
-
-        // Add success animation
-        optionElement.classList.add('success-feedback');
-        setTimeout(() => {
-            optionElement.classList.remove('success-feedback');
-        }, 600);
     }
 
     toggleManualMode() {
@@ -500,7 +472,7 @@ class QuizApp {
         this.startCircularLoader();
         setTimeout(()=>{
             this.navigateQuestion();
-        }, 2000);
+        }, 1000);
         
     }
 
@@ -590,7 +562,7 @@ class QuizApp {
         }
     }
 
-    startCircularLoader(seconds = 2) {
+    startCircularLoader(seconds = 1) {
         this.elements.ciculaeLoaderContainer.style.display = 'block';
         const circle = this.elements.ciculaeLoaderContainer.querySelector(".progress");
         const text = this.elements.ciculaeLoaderContainer.querySelector(".countdown-text");
@@ -813,7 +785,6 @@ function showToast(message, type = "info") {
   });
 
   function dismissToast(toastElement) {
-    return;
     toastElement.style.opacity = "0";
     toastElement.style.transform = "translateX(100%) scale(0.8)";
     setTimeout(() => {
