@@ -74,7 +74,7 @@ class QuizApp {
         }
     }
 
-    async fetchPost(url, data , headers = {}, options = {}){
+    async fetchPost(url, data = {}, headers = {}, options = {}){
         try {
             const token = localStorage.getItem("auth");
             if(!token || token == ''){
@@ -84,6 +84,8 @@ class QuizApp {
                 }, 3000)
                 return;
             }
+            const IP = await this.getClientIP();
+            data.clientipaddress = IP;
             const response = await fetch(url, 
                 {   method: 'POST', 
                     body: JSON.stringify(data), 
@@ -103,6 +105,17 @@ class QuizApp {
             return parsedResponse;
         } catch (error) {
             throw error;
+        }
+    }
+
+    async getClientIP(){
+        try {
+            const result = await fetch("https://api.ipify.org?format=json");
+            const response = await result.json();
+            return response.ip;
+        } catch (error) {
+            console.log(error)
+            return '0.0.0.0'
         }
     }
 

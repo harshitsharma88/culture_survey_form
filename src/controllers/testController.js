@@ -17,7 +17,7 @@ const TestController = {
             const {questionid, useranswer, correctans, responsetype,
                     questionstring, usdamount = 0,
                     agentid, iscorrect = false, reviewed = false, 
-                    reviewedby = null, typed_answer = null}  = req.body;
+                    reviewedby = null, typed_answer = null, clientipaddress = '0.0.0.0'}  = req.body;
             // Make SP parameters here 
             const spData = {
                 AGENTID : req.userInfo.agentid || agentid,
@@ -29,7 +29,7 @@ const TestController = {
                 USERANSWER : useranswer,
                 RESPONSETYPE : responsetype,
                 TYPED_ANSWER : typed_answer,
-                IPADDRESS : ipAddress,
+                IPADDRESS : clientipaddress,
                 DEVICE : deviceInfo,
                 ISCORRECT : iscorrect,
                 USDAMOUNT : usdamount,
@@ -72,7 +72,7 @@ const TestController = {
             if(!agentid || agentid == null || agentid == ''){
                 return res.status(400).json({error : "Missing Required Parameters", message : "AgentID needed to process the request"});
             };
-            const { ipAddress } = Helpers.getIP_DeviceIfoOfRequest(req);
+            // const { ipAddress } = Helpers.getIP_DeviceIfoOfRequest(req);
             const bookingID_Pr = executeStoredProcedure("usp_GetSequence", [{name : "servicetype", value : "OFFERBOOKING"}]);
             const transactionId_Pr = executeStoredProcedure("usp_GetSequence", [{name : "servicetype", value : "OFFERTXN"}]);
             const [{value : booking_ID} = {}, {value : txn_ID } = {}] = await Promise.allSettled([bookingID_Pr, transactionId_Pr]);
@@ -99,7 +99,7 @@ const TestController = {
                             "paymentMessage": "$300 credit to wallet as survey feedback",
                             "createdDate": new Date(),
                             "remark": "$300 credit to wallet as per offer",
-                            "ipAddress": ipAddress
+                            "ipAddress": req.body.clientipaddress || '0.0.0.0'
                         };
                         const result = await Helpers.postRequest(`${process.env.mainapi}Account/InsertWalletDetails`, insertWalletAPI_Data);
                         return res.status(200).json({result : result.data});
@@ -111,7 +111,7 @@ const TestController = {
                 return res.status(400).json({error : "Booking ID Or Txn Id not generated"});
             }
         } catch (error) {
-            console.log(error);
+            Helpers.catchBlock(error, "Error While hitting credit API");
             res.status(500).json({error});
         }
     }
