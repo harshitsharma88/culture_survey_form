@@ -1,5 +1,6 @@
 const { executeStoredProcedure } = require("../config/dbExecution");
 const Helpers = require("../utils/helper");
+const ErrorHandler = require("../errorHandlers/errorPrinting");
 const path = require("path");
 
 const TestController = {
@@ -111,7 +112,7 @@ const TestController = {
                 return res.status(400).json({error : "Booking ID Or Txn Id not generated"});
             }
         } catch (error) {
-            Helpers.catchBlock(error, "Error While hitting credit API");
+            ErrorHandler(error, "Error While hitting credit API")
             res.status(500).json({error});
         }
     }

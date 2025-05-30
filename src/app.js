@@ -2,7 +2,17 @@ const express = require("express");
 const session = require("express-session");
 const useragent = require("express-useragent");
 const app = express();
+const cors = require('cors');
 
+const allowedOrigins = ['https://survey.cultureholidays.com', 'localhost', 'http://127.0.0.1:5500', 'https://cms.tripoculture.com/', 'https://devcms.cultureholidays.com'];
+
+const corsOptions = {
+  origin: allowedOrigins,
+  methods: ['POST', 'GET', 'DELETE', 'PUT'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(useragent.express());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

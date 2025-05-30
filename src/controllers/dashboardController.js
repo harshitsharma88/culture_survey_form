@@ -39,9 +39,9 @@ const DashboardController  = {
                 //     AGENT_NAME : agentResponseParsed[0].NAME, 
                 //     response : JSON.parse(element.AgentResponses)})
             });
-            res.status(200).json({responses : arra, totalQuestions : questions.length})
+            res.status(200).json({responses : arra, totalQuestions : questions })
         }catch(err){
-            console.log(err);
+            res.status(200).json({})
         }
     },
     async addWalletQuestion(req, res, next){

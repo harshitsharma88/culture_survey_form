@@ -1,5 +1,6 @@
 const {executeStoredProcedure} = require("../config/dbExecution");
 const TokenMethods = require("../middlewares/jsonToken");
+const ErrorHandler = require("../errorHandlers/errorPrinting");
 
 const userController = {
     async loginUser(req, res, next){
@@ -9,7 +10,7 @@ const userController = {
             user = user.toLowerCase();
             if(user && user.length > 0 && !user.startsWith("chagt")) user = "CHAGT" + user;
             const params = [{name : "Agentid", value : user}];
-            const result = await executeStoredProcedure("GetAgencyDetailsByAgentid", params);
+            const result = await executeStoredProcedure("GetAgencyDetailsByAgentid_Feedback", params);
             if(!result || !Array.isArray(result) || result.length < 1) return res.redirect(process.env.maindomain);
             const userData = {
                 agentid : result[0].AgentID,
@@ -19,10 +20,13 @@ const userController = {
                 comp_name : result[0].Comp_Name,
                 mobile : result[0].Contact 
             };
+            if(!userData.agentid  || !userData.name || userData.agentid == '' || userData.name == '') return res.redirect(process.env.maindomain);
+            req.session.user = userData;
             const token  = TokenMethods.generateJSONToken(userData);
             return res.render("setToken", {token : token});
         } catch (error) {
-            console.log(error);
+            ErrorHandler(error, "Getting User Data");
+            return res.redirect(process.env.maindomain);
         }
     },
     async testEnvironmentLogin(req, res, next){
